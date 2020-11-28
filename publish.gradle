@@ -66,3 +66,31 @@ static void addLicense(File pom) {
     printer.print(xml)
     writer.close()
 }
+
+
+def repo = new File(rootDir, "repository")
+
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                // change to point to your repo, e.g. http://my.org/repo
+                url "file://${repo.absolutePath}"
+            }
+        }
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+
+                groupId = 'com.google.android.exoplayer'
+                artifactId = releaseArtifact
+                version = releaseVersion
+            }
+        }
+    }
+}
